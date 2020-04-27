@@ -33,7 +33,7 @@ def main(filename):
             out_image[y][x] = src
     plt.imsave('bilder/oppgave2/oppg2_skalert.png', out_image, cmap='gray')
 
-    global_utjevning('bilder/oppgave2/oppg2_skalert.png')
+    global_utjevning('bilder/oppgave2/oppg2_skalert.png') # kan legge til ekstra argument for bits_ut her dersom det er ønskelig, standard er bits_ut=8
     ahe('bilder/oppgave2/oppg2_skalert.png',window_size)
     huang('bilder/oppgave2/oppg2_skalert.png', window_size)
 
@@ -44,9 +44,8 @@ def global_utjevning(filename, bits_ut=8):
     image = imread(filename, flatten=True)
     m,n = image.shape
     N = m*n
-    bins = 2**bits_ut
 
-    histogram = np.zeros(bins)
+    histogram = np.zeros(256)
     for i in range(len(image.ravel())):
         histogram[int(round(image.ravel()[i]))] += 1
     
@@ -56,8 +55,8 @@ def global_utjevning(filename, bits_ut=8):
 
     for i in range(1, len(normal_histogram)):
         cumulative[i] = cumulative[i-1] + normal_histogram[i]
-    
-    T = [round((256-1)*i) for i in cumulative]
+    G = 2**bits_ut
+    T = [round((G-1)*i) for i in cumulative]
 
     out_image = np.ndarray((m,n))
     for i in range(m):

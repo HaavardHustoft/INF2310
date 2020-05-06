@@ -31,29 +31,29 @@ class Kompresjon:
         m_ = int(m/8)
         n_ = int(n/8)
         blokker = np.zeros((m_,n_), dtype=np.ndarray)
+        rekonstruerte_blokker = np.zeros((m_, n_), dtype=np.ndarray)
 
         for i in range(0,m,8):
             for j in range(0,n,8):
                 blokker[int(i/8)][int(j/8)] = self.transform(bilde[i:i+8,j:j+8])
+                blokker[int(i/8)][int(j/8)] = np.round(np.divide(blokker[int(i/8)][int(j/8)], qQ))
         
-        print("Entropi for transformert bilde med kompresjonsrate q={0}: {1:.4g}".format(q, 
-            self.beregn_entropi(self.utvid_blokker(blokker))))
+        """ print("Entropi for transformert bilde med kompresjonsrate q={0}: {1:.4g}".format(q, 
+            self.beregn_entropi(self.utvid_blokker(blokker)))) """
 
-        for i in range(m_):
+        """ for i in range(m_):
             for j in range(n_):
-                blokker[i][j] = np.round(np.divide(blokker[i][j], qQ))
+                blokker[i][j] = np.round(np.divide(blokker[i][j], qQ)) """
         
         print("Entropi for kvantifisert bilde med kompresjonsrate q={0}: {1:.4g}".format(q, 
             self.beregn_entropi(self.utvid_blokker(blokker))))
         
-        rekonstruerte_blokker = np.zeros((m_, n_), dtype=np.ndarray)
+        
         for i in range(m_):
             for j in range(n_):
                 blokker[i][j] = np.round(np.multiply(blokker[i][j], qQ))
-        
-        for i in range(0, m_):
-            for j in range(0, n_):
                 rekonstruerte_blokker[i][j] = self.inv_transform(blokker[i][j])
+
         rekonstruerte_blokker += 128
 
         rekonstruert = self.utvid_blokker(rekonstruerte_blokker)
